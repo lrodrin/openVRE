@@ -40,7 +40,7 @@ Page Header
   min-height: 50px;
   filter: none;
   background-image: none;
-  border-bottom: 2px solid #e4032e;
+  border-bottom: 2px solid #FFFFFF;
   /* Fixed header */
   /* Header logo */
   /* Search box */
@@ -778,7 +778,9 @@ Page sidebar
     margin: 0;
     padding: 0;
     /* 1st level links */
-    /* all links */ }
+    /* all links */
+    background-image: linear-gradient(to bottom, #CAD461, #75B9BE);
+    }
     .page-sidebar .page-sidebar-menu > li,
     .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li {
       display: block;
@@ -1558,7 +1560,7 @@ Page content
       .page-content-white .page-bar .page-breadcrumb > li > span,
       .page-container-bg-solid .page-bar .page-breadcrumb > li > a,
       .page-container-bg-solid .page-bar .page-breadcrumb > li > span {
-        color: #888; }
+        color: #343F3E; }
       .page-content-white .page-bar .page-breadcrumb > li > i,
       .page-container-bg-solid .page-bar .page-breadcrumb > li > i {
         color: #aaa; }
@@ -1591,9 +1593,9 @@ Page content
   padding: 0px;
   background-color: #fff; }
   .page-container-bg-solid .page-content {
-    background: #eef1f5; }
+    background: white; }
   .page-content-white .page-content .page-bar {
-    border-bottom: 1px solid #e7ecf1; }
+    border-bottom: 1px solid #eee; }
   .page-content-white.page-md .page-content .page-bar,
   .page-container-bg-solid.page-md .page-content .page-bar {
     border-radius: 0 !important; }
