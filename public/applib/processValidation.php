@@ -85,8 +85,10 @@ switch ($_REQUEST['op']) {
     // check validation actions to perfome on file
     switch ( $_REQUEST['format'] ) {
 
-	case 'BAM':
-        if (!isset($_REQUEST['refGenome']) || !isset($_REQUEST['paired']) || !isset($_REQUEST['sorted'])){
+    case 'BAM':
+	    
+/*  TODO: Include BAM metadata when upload
+ * if (!isset($_REQUEST['refGenome']) || !isset($_REQUEST['paired']) || !isset($_REQUEST['sorted'])){
             $resp['msg']="Missing compulsory fields. Please, especify: reference genome, sorted/unsorted and paired/single.</br>";
         	$resp['state'] = 0;
             break;
@@ -106,7 +108,10 @@ switch ($_REQUEST['op']) {
                 $resp['msg']   = "BAM file already indexed.</br>";
 		        $resp['state'] = 1;
            }
-        }
+	}
+ */
+	$resp['state'] = 2;
+
 	    break;
 
     case 'BEDGRAPH';

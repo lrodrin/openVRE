@@ -1143,36 +1143,43 @@ class Tooljob {
     */
     protected function fromVREfile_toMUGfile($file) {
         $mugfile        = array();
-		$compressions   = $GLOBALS['compressions'];
+	$compressions   = $GLOBALS['compressions'];
         $mugfile['_id'] = $file['_id'];
 
-		//path -> file_path (relative to user_data_directory)
+	//ensure "type:file" is there
+	if (!isset($file['type'])){
+		$mugfile['type'] = "file";
+	}else{
+		$mugfile['type'] = $file['type'];
+	}
+	
+	//path -> file_path (relative to user_data_directory)
         if (isset($file['path'])){
-			if (preg_match('/^\//', $file['path']) || preg_match('/^'.$_SESSION['User']['id'].'/', $file['path']) ){
+	    if (preg_match('/^\//', $file['path']) || preg_match('/^'.$_SESSION['User']['id'].'/', $file['path']) ){
                 $path = explode("/",$file['path']);
                 $mugfile['file_path'] = implode("/",array_slice($path,-3,3));
-			}else{
+	    }else{
                 $mugfile['file_path'] = $file['path'];
-			}
+	    }
         }else{
             $mugfile['file_path'] = NULL;
-		}
+	}
 
-		// format -> file_type
+	// format -> file_type
         if (isset($file['format'])){
             $mugfile['file_type'] = $file['format'];
         }else{
             $mugfile['file_type'] = "UNK";
         }
 
-		// data_type -> data_type
+	// data_type -> data_type
         if (isset($file['data_type'])){
             $mugfile['data_type'] = $file['data_type'];
         }else{
             $mugfile['data_type'] = NULL;
         }
 
-		// compressed -> compressed
+	// compressed -> compressed
         if (isset($file['path'])){
 			$ext = pathinfo($file['path'], PATHINFO_EXTENSION);
 			$ext = preg_replace('/_\d+$/',"",$ext);
@@ -1184,7 +1191,7 @@ class Tooljob {
             }
         }
 
-		// input_files -> sources
+	// input_files -> sources
         if (isset($file['input_files'])){
 		if (!is_array($file['input_files'])){
 			$mugfile['sources']=array($file['input_files']);
@@ -1195,19 +1202,19 @@ class Tooljob {
             $mugfile['sources'] = array();
         }
 
-		// owner -> user_id
+	// owner -> user_id
         if (isset($file['owner']))
             $mugfile['user_id'] = $file['owner'];
         else
             $mugfile['user_id'] = $_SESSION['User']['id'];
 
-		// mtime -> creation_time
+	// mtime -> creation_time
         if (isset($file['mtime']))
             $mugfile['creation_time'] = $file['mtime'];
         else
             $mugfile['creation_time'] = new MongoDB\BSON\UTCDateTime(strtotime("now")*1000);
 
-		// taxon_id -> taxon_id
+	// taxon_id -> taxon_id
         if (isset($file['taxon_id'])){
 			$mugfile['taxon_id'] = $file['taxon_id'];
         }else{
@@ -1215,11 +1222,12 @@ class Tooljob {
 				$mugfile['taxon_id'] = 0;
             }else{
 				//$refGenome_to_taxon = Array( "hg19"=>"9606", "R64-1-1"=>"4932", "r5.01"=>"7227");
-                $mugfile['taxon_id'] =(isset($this->refGenome_to_taxon[$file['refGenome']])?$this->refGenome_to_taxon[$file['refGenome']]:0);
+               $mugfile['taxon_id'] =(isset($this->refGenome_to_taxon[$file['refGenome']])?$this->refGenome_to_taxon[$file['refGenome']]:0);
 			}
 		}
 
         unset($file['_id']);
+        unset($file['type']);
         unset($file['path']);
         unset($file['mtime']);
         unset($file['format']);
@@ -1230,16 +1238,15 @@ class Tooljob {
         unset($file['input_files']);
         unset($file['owner']);
 
-		// other -> meta_data
-                $mugfile['meta_data']  = $file;
+	// other -> meta_data
+        $mugfile['meta_data']  = $file;
 
-		// refGenome -> assembly	
-                if (isset($mugfile['meta_data']['refGenome']) ){
-                        $mugfile['meta_data']['assembly'] = $mugfile['meta_data']['refGenome'];
-			unset($mugfile['meta_data']['refGenome']);
-		}
-
-                return $mugfile;
+	// refGenome -> assembly	
+        if (isset($mugfile['meta_data']['refGenome']) ){
+                $mugfile['meta_data']['assembly'] = $mugfile['meta_data']['refGenome'];
+		unset($mugfile['meta_data']['refGenome']);
+	}
+        return $mugfile;
     }
 
     /**

@@ -20,16 +20,14 @@
 
 ################# FEEL FREE TO EDIT  ##################
 
-
-$caduca_strict = 7;  // Expiration for the README.md files automatically created (in days). Ie. 7 days after creation, file expires
+$caduca_readme = 7;  // Expiration for the README.md files automatically created. \
                      // Expiration for the other files is not altered and it is read from DB
 $dry_run   = false;  // true: evaluate files but dont delete them.
                      // false: real run - activates the cleaning
 $soft_mode = false;  // true: only README files are elegible to be cleaned (so non-used anonymous users might be deleted).\
                      // false: all files are elegible to be cleaned
-$only_anon = true;  // true: the cleaning only is done over data from anonynous users
-                    // false: the cleaning is applied to all users (except for admin users)
-                    //        TODO(1): delete user's folder that end up empty after cleaning
+$only_anon = false;  // true: the cleaning only is done over data from anonynous users
+                     // false: the cleaning is applied to all users (except for admin users)
 $rm_temporary = true;// true: remove temporary data for all users ('tmpUser_dir'), regardless 'only_clean_anon'
                      // false: do not clean temporary data
 $verbose   = 0;      // Options: 0|1
@@ -44,8 +42,8 @@ print "\n########### START DATE: ".date("Y-m-d H:i:s")." ##################\n";
 require __DIR__."/../../config/bootstrap.php";
 
 // query users whose files will be cleaned
-$users_query = ($only_anon? array('Type' => "3") : array('Type' => array('$in' => array ("3","2","1"))) );
-$fu = $GLOBALS['usersCol']->find($users_query);
+$fu   = $GLOBALS['usersCol']->find(array('Type' => array('$in' => array ("3","2","1"))));
+//$fu = $GLOBALS['usersCol']->find(array('Type' => "3"));
 
 $errors=array();
 
@@ -93,7 +91,7 @@ foreach ( array_values(iterator_to_array($fu)) as $v ){
     $_SESSION['User'] = $v;
 
     // check dataDir exists in disk
-    $rdir =  $GLOBALS['dataDir']."/".$v['id'];
+    $rdir =  $GLOBALS['dataDir'].$v['id'];
     if (! is_dir($rdir)){
 
         if ($v['Type'] == 3 ){
@@ -168,7 +166,7 @@ foreach ( array_values(iterator_to_array($fu)) as $v ){
                 continue;
             }
 
-            // delete READMEs based on shorten expiration dates (mtime + 'caduca_strict')
+            // delete READMEs based on shorten expiration dates (mtime + 'caduca_readme')
             //if (preg_match('/README.md/',$f['path']) && $v['Type'] == 3 ){
             if (preg_match('/README.md/',$f['path'])){
 
@@ -183,7 +181,7 @@ foreach ( array_values(iterator_to_array($fu)) as $v ){
                 }else{
                     $time_mtime  = strftime('%Y/%m/%d %H:%M', $f['mtime']);
                     $daysold     = intval(( time() - $f['mtime'] ) / (24 * 3600));
-                    $days2expire_readme = $caduca_strict - intval(( time() - $f['mtime'] ) / (24 * 3600));
+                    $days2expire_readme = $caduca_readme - intval(( time() - $f['mtime'] ) / (24 * 3600));
 
                     if ($days2expire_readme < 0){
                         print $msg_fn;
@@ -257,7 +255,7 @@ foreach ( array_values(iterator_to_array($fu)) as $v ){
             // delete file if required
             if (($tobedeleted === true && $soft_mode=== false) || $tobedeleted_evenSoftMode === true ){
 
-                if (is_file($GLOBALS['dataDir']."/".$f['path']) && !is_writable($GLOBALS['dataDir']."/".$f['path'])){
+                if (!is_writable($GLOBALS['dataDir']."/".$f['path'])){
                     print "FATAL: Cannot delete file. '".$GLOBALS['dataDir']."/".$f['path']."' is not writable: permission denied\n";
                     exit(0);
                 }
@@ -277,11 +275,6 @@ foreach ( array_values(iterator_to_array($fu)) as $v ){
                 }else{
                     print "----- File '".$f['path']."' deleted\n";
                 }
-
-                // TODO(1) delete parent dir if results empty. Do not delete uploads?
-                //$parent_files_after = getGSFilesFromDir(array('_id'=>$f['parentDir']));
-                //if (count($parent_files_after == 0)){}
-
             }else{
                 if ($verbose){ print "----- Doing nothing\n";}
             }
@@ -322,41 +315,17 @@ foreach ( array_values(iterator_to_array($fu)) as $v ){
 }
 if ($errors){
     print "\nSummarizing the errors occurred during file cleaning (".count($errors)."):\n - ";
-    print join("\n - ",$errors)."\n";
+    join("\n - ",$errors)."\n";
 }
 
 // clean temporary files
 if ($rm_temporary === true){
-    $tmp_users = $GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir'];
-    print "\n\nLooking for temporary data ($tmp_users)\n";
-
-    // find and delete files in .tmp older than 'caduca_strict'
-    //$cmd="find ".$GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir']."  -maxdepth 1  -mtime +".$caduca_strict." -type f -exec rm -fv {} \\;";
-    $cmd = "find ".$GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir']."  -maxdepth 1  -mtime +".$caduca_strict." -type f ";
-    if ($dry_run === false) {
-        $cmd.= " -exec rm -fv {} \\;";
+    $tmp_dir_regexp = $GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir'];
+    print "\n\nLooking for temporary data ($tmp_dir_regexp)\n";
+    foreach(glob($tmp_dir_regexp) as $tmp_dir) {
+        system("rm -Rfv $tmp_dir/*_[0-9]*");
+        system("rm -fv  $tmp_dir/*");
     }
-    print "-- $cmd\n";
-    system($cmd);
-
-    // find and delete directories in .tmp named like '?*_[0-9]*' and older than 'caduca_strict'
-    //$cmd="find ".$GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir']."  -maxdepth 1  -mtime +".$caduca_strict." -type d -name '?*_[0-9]*' -exec rm -Rfv {} \\;";
-    $cmd = "find ".$GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir']."  -maxdepth 1  -mtime +".$caduca_strict." -type d -name '?*_[0-9]*' ";
-    if ($dry_run === false) {
-        $cmd.= " -exec rm -Rfv {} \\;";
-    }
-    print "-- $cmd\n";
-    system($cmd);
-
-    // find and delete TAR files in .tmp bigger than 2GB  // TODO: no need of it when issue with 'massive TARs' is solved
-    //$cmd="find ".$GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir']."  -maxdepth 1  -size +2G -mtime -".$caduca_strict." -type f -name '*tar.gz' -exec rm -fv {} \\;";
-    $cmd = "find ".$GLOBALS['dataDir']."/*/*/".$GLOBALS['tmpUser_dir']."  -maxdepth 1  -size +2G -mtime -".$caduca_strict." -type f -name '*tar.gz' ";
-    if ($dry_run === false) {
-        $cmd.= " -exec rm -fv {} \\;";
-    }
-    print "-- $cmd\n";
-    system($cmd);
 }
 
 print "\n########### END DATE: ".date("Y-m-d H:i:s")." ##################\n";
-

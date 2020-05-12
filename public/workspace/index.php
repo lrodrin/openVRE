@@ -204,7 +204,7 @@ $proj_name_active   = getAttr_fromGSFileId($_SESSION['User']['dataDir'], "name")
 										<div class="portlet-body">
 
 											<div class="input-group" style="margin-bottom:20px;">
-												<span class="input-group-addon" style="background:#5e738b;"><i class="fa fa-wrench font-white"></i></span>
+												<span class="input-group-addon" style="background:#81b07d;"><i class="fa fa-wrench font-white"></i></span>
 												<select class="form-control" style="width:100%;" onchange="loadWSTool(this)">
 													<option value="">Filter files by tool</option>
 													<?php foreach ($toolsList as $tl) { ?>

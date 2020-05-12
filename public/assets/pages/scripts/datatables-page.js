@@ -60,7 +60,7 @@ $(document).ready(function() {
 		 if($(row).data('tt-parent-id') === undefined) {
 
 				$(row).css('font-weight', 'bold');
-				$(row).css('color', '#337ab7');
+				$(row).css('color', '#89b785');
 				if($('td:first-child', row).hasClass('highlighted_folder')) {
 					/*var folderIcon = '<span class="fa-stack fa-lg" style="height: 0;">' +
   				'<i class="fa fa-folder fa-stack-1x font-blue-oleo" style="left:-5px;top: -9px;"></i>' + 

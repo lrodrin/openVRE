@@ -34,7 +34,7 @@ div.tooltip-inner  {
 
 .login-guest  {
      margin-bottom: 5px!important;
-     background-color: #007399!important;
+     background-color: #689a6e!important;
  }
 
 .login .content .create-account.login-guest p a  {
@@ -204,11 +204,11 @@ body  {
  }
 
 .page-sidebar .page-sidebar-menu>li>a,  .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a  {
-     border-top:  1px solid #007399;
+     border-top:  1px solid #689a6e;
  }
 
 .page-sidebar .page-sidebar-menu>li.active.open+li>a,  .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.active.open+li>a  {
-    border-top:  1px solid #007399;
+    border-top:  1px solid #689a6e;
 }
 
 .page-sidebar-menu.page-sidebar-menu-closed>li:hover, .page-sidebar-menu.page-sidebar-menu-closed>li:hover>.sub-menu  {
@@ -462,7 +462,7 @@ left: 50%;
      top: 50%;
      margin: -15px 0 0 -75px;
      padding:  5px 0 5px 35px;
-     color: #337ab7;
+     color: #89b785;
     
 background: #fafafa url(../img/loading-spinner-blue.gif) no-repeat 5px;
      
