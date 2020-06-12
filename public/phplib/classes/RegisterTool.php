@@ -47,10 +47,10 @@ class RegisterTool {
         if (!$tool_executable){
             $_SESSION['errorData']['Warning'][]="'Setting a foo value for \$TOOL_EXECUTABLE'. Please, edit it manually into test files (test.sh)";
         }
-        $this->tool_lib        =($tool_lib? $tool_lib : "/packages/to/add/into/pythonpath");
-        $this->tool_executable =($tool_executable? $tool_executable : "/main/mg-tool/executable.py");
-        $this->execution       =($execution? $execution : "/test/execution/directory");
-        if (!preg_match('/^\//', $execution) || !preg_match('/^\//', $tool_lib) || !preg_match('/^\//', $tool_executable) ){
+        $this->tool_lib        =($tool_lib!=0 ? $tool_lib : "/packages/to/add/into/pythonpath");
+        $this->tool_executable =($tool_executable!=0 ? $tool_executable : "/main/mg-tool/executable.py");
+        $this->execution       =($execution!=0 ? $execution : "/test/execution/directory");
+        if (!preg_match('/^\//', $this->execution) || !preg_match('/^\//', $this->tool_lib) || !preg_match('/^\//', $this->tool_executable) ){
             $_SESSION['errorData']['Warning'][]="Make sure that paths given for files and directories of your local installation are absolute paths.";
             //return 0;
         }
