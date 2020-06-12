@@ -655,17 +655,22 @@ class RegisterTool {
 
         $all_test_files = array();
         foreach ($this->tool_io['input_files_combinations'] as $comb){
-            $all_test_files[$comb['description']] = array( "configuration_file" => str_replace($GLOBALS['dataDir'],"",$this->configuration_files[$comb['description']]),
-                                                            "metadata_file"     => str_replace($GLOBALS['dataDir'],"",$this->metadata_files[$comb['description']]),
-                                                            "bash_file"         => str_replace($GLOBALS['dataDir'],"",$this->bash_files[$comb['description']]));
+	    $test_file1 = trim(str_replace($GLOBALS['dataDir'],"",$this->configuration_files[$comb['description']]),"/");
+	    $test_file2 = trim(str_replace($GLOBALS['dataDir'],"",$this->metadata_files[$comb['description']]),"/");
+	    $test_file3 = trim(str_replace($GLOBALS['dataDir'],"",$this->bash_files[$comb['description']]),"/");
+            $all_test_files[$comb['description']] = array( "configuration_file" => $test_file1,
+                                                            "metadata_file"     => $test_file2,
+							    "bash_file"         => $test_file3
+						    );
         }
+	$test_files = trim(str_replace($GLOBALS['dataDir'],"",$this->tar_file),"/");
         $GLOBALS['toolsDevMetaCol']->updateOne(array('_id' => $this->toolId),
                                             array('$set'   => array('last_status_date' => date('Y/m/d H:i:s'),
                                                                     'step1.date'       => date('Y/m/d H:i:s'),
                                                                     'step1.tool_io_files' => true,
-                                                                    'step1.status'        => true,
+                                                                    'step1.status'        => false,
                                                                     'step1.tool_io_saved' => true,
-                                                                    'step1.test_files'    => str_replace($GLOBALS['dataDir'],"",$this->tar_file),
+                                                                    'step1.test_files'    => $test_files,
                                                                     'step1.files'      => $all_test_files)
                                                                 ));
 
