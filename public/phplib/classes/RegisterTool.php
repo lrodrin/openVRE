@@ -72,14 +72,13 @@ class RegisterTool {
      * @param array $tool Fill in config file: input_files, arguments and output_files
     */
     public function setConfiguration_files(){
-
     $execution = $this->execution;    
     $project   = $this->project;
 
     // check tool_io
     if (!isset($this->tool_io['_id']) || !isset($this->tool_io['input_files']) || !isset($this->tool_io['arguments']) || !isset($this->tool_io['output_files'])){
         $_SESSION['errorData']['Error'][]="Cannot create test configuration file. The given inputs/outputs definition is not correct";
-		return 0;
+	return 0;
     }
 
   	// Set json base
@@ -91,9 +90,12 @@ class RegisterTool {
    		),
    		'output_files'=>Array()
     );
-
     // prepare config for each input_file_combination
     $c=0;
+    if (!isset($this->tool_io['input_files_combinations']) || !count($this->tool_io['input_files_combinations'])){
+        $_SESSION['errorData']['Error'][]="Cannot create test configuration file. The JSON section 'input_files_combinations' is empty or not defined";
+	return 0;
+    }
     foreach ($this->tool_io['input_files_combinations'] as $comb){
 
         // Set rfn
