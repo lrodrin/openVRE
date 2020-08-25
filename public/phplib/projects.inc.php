@@ -1451,7 +1451,7 @@ function processPendingFiles($sessionId,$files=array()){
 				$job_in_err=1;
 
 			}else{
-				$_SESSION['errorData']['Error'][]="Job output outfile ($out_name) generated (".basename($rfn).").";
+				$_SESSION['errorData']['Error'][]="Job output outfile ($out_name) not created";
 			    	log_addOutregister($pid,"Failed to register outfile $out_name '$rfn'. File NOT found in disk");
 				if ($debug){
 					print "<br/>JOB $pid FINISHED BUT NO EXPECTED OUTFILE '$rfn' FOUND  IN DISK. Set ERROR<br>";

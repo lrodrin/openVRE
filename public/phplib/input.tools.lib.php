@@ -222,7 +222,7 @@ function InputTool_printSelectFile($input, $rerun, $ff, $multiple, $required) {
 					<span class="input-group-addon"><i class="fa fa-file"></i></span>
 					<textarea 
 						name="visible_'.$input['name'].'"
-						class="form-control form-field-enabled field_required" 
+						class="form-control form-field-enabled '.$req.'" 
 						style="height:'.$textarea_height.'px"
 						placeholder="'.$GLOBALS['placeholder_input'].'" 
 						readonly>'.implode("\n", $p).'</textarea>
@@ -245,7 +245,7 @@ function InputTool_printSelectFile($input, $rerun, $ff, $multiple, $required) {
 }
 
 // print list of files (in select) 
-function InputTool_printListOfFiles($input, $rerun, $required) {
+function InputTool_printListOfFiles($input, $rerun, $required, $allow_multiple=false) {
 
 	$req = "field_not_required";
 	if($required) $req = "field_required";
@@ -253,22 +253,27 @@ function InputTool_printListOfFiles($input, $rerun, $required) {
 	$output = '<div class="form-group">
 		<label class="control-label">'.$input['description'].' <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align=\'left\' style=\'margin:0\'>'.$input['help'].'</p>"></i></label>
 		<div class="input-group">
-			<span class="input-group-addon"><i class="fa fa-file"></i></span>
-			<select name="input_files_public_dir['.$input['name'].']" class="form-control '.$req.'">
-				<option value="">Select the '.$input['description'].'</option>';
+			<span class="input-group-addon"><i class="fa fa-file"></i></span>';
+	if ($allow_multiple) {
+		$output .= '	<select  name="input_files_public_dir['.$input['name'].'][]" id="'.str_replace(":", "_", $input['name']).'" class="form-control '.$req.'" multiple="multiple">';
+	}else{
+		$output .= '    <select name="input_files_public_dir['.$input['name'].']" class="form-control '.$req.'">';
+	}
+	$output .= '		<option value="">Select the '.$input['description'].'</option>';
 
-				$tool_options = $input['enum_items'];
-				for ($i=0; $i<count($tool_options['name']); $i++){
+	$tool_options = $input['enum_items'];
+	for ($i=0; $i<count($tool_options['name']); $i++){
 
-					if($tool_options['name'][$i] == $rerun) $sel = "selected";
-					else $sel = "";
+		if($tool_options['name'][$i] == $rerun) $sel = "selected";
+		else $sel = "";
 
-					$output .= '<option value="'.$tool_options['name'][$i].'" '.$sel.'>'.$tool_options['description'][$i].'</option>';
-				} 
+		$output .= '         <option value="'.$tool_options['name'][$i].'" '.$sel.'>'.$tool_options['description'][$i].'</option>';
+	} 
 
 	$output .= '</select>
 		</div>
 	</div>';
+
 
 	echo $output;
 
