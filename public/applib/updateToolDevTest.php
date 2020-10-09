@@ -250,7 +250,6 @@ if ($debug){
     exit(0);
 }
 
-
 redirect($GLOBALS['BASEURL'].'admin/myNewTools.php');
 
 ?>

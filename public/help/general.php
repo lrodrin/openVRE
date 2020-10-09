@@ -36,18 +36,19 @@ redirectOutside();
             </div>
             <!-- END PAGE BAR -->
             <!-- BEGIN PAGE TITLE-->
-            <h1 class="page-title"> What is iPC ?</h1>
+            <h1 class="page-title"> What is iPC Virtual Research Environment (VRE) ?</h1>
             <!-- END PAGE TITLE-->
             <!-- END PAGE HEADER-->
 
             <div class="note note-info">
                 <h4 class="block">
-                    iPC is an infra-structure designed to establish a continuous automated benchmarking system
-                    for bioinformatics methods, tools and web services.
+                    iPC Virtual Research Environment (VRE) is a cloud-based infra-structure designed to establish a
+                    continuous automated benchmarking system for precision pediatric oncology methods, tools and web
+                    services.
                 </h4>
             </div>
 
-            <p><img src="assets/layouts/layout/img/help/Diagram_with_textbox.svg" style="width:80%;max-width:100%;"/>
+            <p><img class="center-block" src="assets/layouts/layout/img/help/Diagram_with_textbox.png" style="width:45%;max-width:50%;"/>
             </p>
 
             <p>

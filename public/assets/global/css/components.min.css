@@ -7907,8 +7907,8 @@ body[ng-controller] .modal {
 }
 
 .note.note-info {
-    background-color: #f5f8fd;
-    border-color: #8bb4e7;
+    /*background-color: #f5f8fd;
+    border-color: #8bb4e7;*/
     color: #010407
 }
 
