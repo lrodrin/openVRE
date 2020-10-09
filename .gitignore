@@ -19,3 +19,5 @@ public/refGenomes
 public/visualizers/jbrowse/
 public/callSystem.php
 public/assets.BO/
+
+.idea/
